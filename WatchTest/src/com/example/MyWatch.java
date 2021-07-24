@@ -14,11 +14,11 @@ import java.util.function.Consumer;
 
 public class MyWatch {
 	// 프로젝트 경로
-	private String projPath; 
+	private String[] projPath; 
 
 	private WatchKey watchKey;
 
-	public MyWatch(String projPath) {
+	public MyWatch(String[] projPath) {
 		this.projPath = projPath;
 	}
 	
@@ -26,10 +26,12 @@ public class MyWatch {
 		// watchService 생성
 		WatchService watchService = FileSystems.getDefault().newWatchService();
 		// 경로 생성
-		Path path = Paths.get(projPath);
-		// 해당 디렉토리 경로에 와치서비스와 이벤트 등록
-		path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.OVERFLOW);
+		for(String p : projPath) {
+			Path path = Paths.get(p);
+			// 해당 디렉토리 경로에 와치서비스와 이벤트 등록
+			path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.OVERFLOW);
 //		path.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+		}
 
 		Thread thread = new Thread(() -> {
 			while (true) {
